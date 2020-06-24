@@ -1,11 +1,13 @@
-import { createStore, combineReducers } from 'redux'
+import { createStore, combineReducers, compose, applyMiddleware } from 'redux'
 import { persistReducer } from 'redux-persist'
 import storage from 'redux-persist/lib/storage'
 import autoMergeLevel2 from 'redux-persist/lib/stateReconciler/autoMergeLevel2'
-import { todos } from './todos/reducers'
+import thunk from 'redux-thunk'
+import { todos, isLoading } from './todos/reducers'
 
 const reducers = {
-  todos
+  todos,
+  isLoading
 }
 
 const persistConfig = {
@@ -19,6 +21,7 @@ const persistedReducer = persistReducer(persistConfig, rootReducer)
 
 export const configureStore = () => createStore(
   persistedReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ &&
-  window.__REDUX_DEVTOOLS_EXTENSION__()
+  compose(
+    applyMiddleware(thunk)
+  )
 )
