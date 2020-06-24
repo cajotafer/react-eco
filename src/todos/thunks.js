@@ -1,9 +1,18 @@
-import { loadTodosInProgress, loadTodosSuccess, loadTodosFailure } from './actions'
+import { 
+  createTodo,
+  removeTodo,
+  markTodoAsCompleted,
+  loadTodosInProgress, 
+  loadTodosSuccess, 
+  loadTodosFailure 
+} from './actions'
+
+const BASE_URL = 'http://localhost:8080/todos'
 
 export const loadTodos = () => async (dispatch, getState) => {
   try {
     dispatch(loadTodosInProgress())
-    const response = await fetch('http://localhost:8080/todos')
+    const response = await fetch(BASE_URL)
     const todos = await response.json()
     
     dispatch(loadTodosSuccess(todos))
@@ -16,7 +25,7 @@ export const loadTodos = () => async (dispatch, getState) => {
 export const addTodoRequest = text => async dispatch => {
   try {
     const body = JSON.stringify({text})
-    const response = await fetch('http://localhost:8080/todos', {
+    const response = await fetch(BASE_URL, {
       headers: {
         'Content-Type': 'application/json'
       },
@@ -25,6 +34,30 @@ export const addTodoRequest = text => async dispatch => {
     })
     const todo = await response.json()
     dispatch(createTodo(todo))
+  } catch (e) {
+    dispatch(displayAlert(e))
+  }
+}
+
+export const removeTodoRequest = id => async dispatch => {
+  try {
+    const response = await fetch (`${BASE_URL}/${id}`, {
+      method: 'delete'
+    })
+    const removedTodo = await response.json()
+    dispatch(removeTodo(removedTodo))
+  } catch (e) {
+    dispatch(displayAlert(e))
+  }
+}
+
+export const markTodoAsCompletedRequest = id => async dispatch => {
+  try {
+    const response = await fetch (`${BASE_URL}/${id}/completed`, {
+      method: 'post'
+    })
+    const updatedTodo = await response.json()
+    dispatch(markTodoAsCompleted(updatedTodo))
   } catch (e) {
     dispatch(displayAlert(e))
   }
