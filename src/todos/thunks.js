@@ -7,7 +7,7 @@ import {
   loadTodosFailure 
 } from './actions'
 
-const BASE_URL = 'http://localhost:8080/todos'
+export const BASE_URL = 'http://localhost:8080/todos'
 
 export const loadTodos = () => async (dispatch, getState) => {
   try {

@@ -7,7 +7,7 @@ import {
   LOAD_TODOS_FAILURE
 } from './actions'
 
-const initialState = { isLoading : false, data: [] }
+export const initialState = { isLoading : false, data: [] }
 
 export const todos = (state = initialState, action) => {
   const { type, payload } = action
